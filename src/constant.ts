@@ -1,0 +1,1 @@
+export const DATA_TRANSFER_KEY = "DATA_TRANSFER_KEY";
