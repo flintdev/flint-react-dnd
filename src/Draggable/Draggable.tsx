@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FLINT_REACT_DND_DROPLINE } from 'src/constant';
+import { FLINT_REACT_DND_DROPLINE } from '../constant';
 
 export interface Props {
     children: (props: any) => React.ReactElement,
