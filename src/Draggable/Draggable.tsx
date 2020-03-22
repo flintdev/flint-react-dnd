@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { FLINT_REACT_DND_DROPLINE } from 'src/constant';
 
 export interface Props {
     children: (props: any) => React.ReactElement,
@@ -15,6 +16,19 @@ export default class Draggable extends React.Component<Props, any> {
         this.state = {};
     }
 
+    checkContainerBar(e: any) {
+        const isValid = document.getElementById(FLINT_REACT_DND_DROPLINE);
+        if (!isValid) {
+            let newBar = document.createElement("div");
+            newBar.style.width = `100%`;
+            newBar.style.display = `none`;
+            newBar.style.backgroundColor = `#9436a5`;
+            newBar.style.height = `5px`;
+            newBar.setAttribute("id", FLINT_REACT_DND_DROPLINE);
+            e.target.appendChild(newBar)
+        }
+    }
+
     handleOnDragStart(e: any) {
         e.dataTransfer.effectAllowed = "move";
         this.setState({
@@ -28,8 +42,9 @@ export default class Draggable extends React.Component<Props, any> {
 
     handleOnDragEnter(e: any) {
         e.stopPropagation();
-        e.target.parentNode.insertBefore(document.getElementById("container-bar"), e.target);
-        document.getElementById("container-bar")!.style.display = "block";
+        this.checkContainerBar(e);
+        e.target.parentNode.insertBefore(document.getElementById(FLINT_REACT_DND_DROPLINE), e.target);
+        document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "block";
     }
     
     handleOnDragLeave(e: any) {
@@ -43,7 +58,7 @@ export default class Draggable extends React.Component<Props, any> {
     handleOnDragEnd(e: any) {
         const {onDragEnd} = this.props;
         const { id, index, type, parentId } = this.state
-        const destination = document.getElementById("container-bar")?.parentNode as any;
+        const destination = document.getElementById(FLINT_REACT_DND_DROPLINE)?.parentNode as any;
         const getDestinationIndex = (children: any[]) => {
             let containerSelft = false;
             for (let i = 0; i < children.length; i++) {
@@ -51,7 +66,7 @@ export default class Draggable extends React.Component<Props, any> {
                 const childID = child.getAttribute("id");
                 if (childID === id) {
                     containerSelft = true;
-                } else if (childID === "container-bar") {
+                } else if (childID === FLINT_REACT_DND_DROPLINE) {
                     return i - (containerSelft ? 1 : 0); 
                 }
             }
@@ -71,10 +86,10 @@ export default class Draggable extends React.Component<Props, any> {
                 }
             })
         } else {
-            console.log('>>> missing onDragEnd()')
+            console.warn('message from @flintdev/flint-react-dnd:\n Please add your onDragEnd()')
         }
         e.stopPropagation();
-        document.getElementById("container-bar")!.style.display = "none";
+        document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "none";
     }
 
     render() {
