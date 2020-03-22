@@ -1,7 +1,5 @@
 import * as React from 'react';
-import { Draggable as BaseDraggable, Droppable as BaseDroppable, DropLine } from "../src/index";
-import { DroppableProps } from "../src/Droppable/interface";
-import { DraggableProps } from "../src/Draggable/interface";
+import { Draggable, Droppable } from "../src/index";
 import { initData } from "./initData";
 
 export default class ExampleContainer extends React.Component<any, any> {
@@ -10,30 +8,28 @@ export default class ExampleContainer extends React.Component<any, any> {
         this.state = {
             initChildren: initData
         };
+        this.handleOnDragEnd = this.handleOnDragEnd.bind(this);
     }
+
     handleOnDragEnd(data: any) {
         const {source, destination, draggableId, type} = data;
         console.log('>>> handleOnDragEnd', new Date().getTime(), data);
+        
+        /* UPDATE_YOUR_DATA_HERE*/
         this.setState({initChildren: [...initData]})
     }
 
     render() {
         const {initChildren} = this.state;
-        const Droppable = (props: DroppableProps) => {
-            return <BaseDroppable {...props} onDragEnd={(data: any) => this.handleOnDragEnd(data)}>{props.children}</BaseDroppable>
-        }
-        const Draggable = (props: DraggableProps) => {
-            return <BaseDraggable {...props} onDragEnd={(data: any) => this.handleOnDragEnd(data)}>{props.children}</BaseDraggable>
-        }
         const renderChildren = (children: any[]) => {
             return children.map((child, index) => {
                 const { type, children, id } = child;
                 if (type === "Grid") {
                     return (
-                        <Draggable  key={id} draggableId={`${id}-drag`} type={type} index={index}>
+                        <Draggable key={id} draggableId={`${id}-drag`} type={type} index={index} onDragEnd={this.handleOnDragEnd}>
                             {({ handler }) => (
                                 <div {...handler}>
-                                    <Droppable key={id} droppableId={`${id}-drop`} type={type}>
+                                    <Droppable key={id} droppableId={`${id}-drop`} type={type} onDragEnd={this.handleOnDragEnd}>
                                         {({ handler, status }) => (
                                             <div {...handler}
                                                 style={{
@@ -56,7 +52,7 @@ export default class ExampleContainer extends React.Component<any, any> {
                     )
                 } else {
                     return (
-                        <Draggable draggableId={id} key={id} index={index} type={type}>
+                        <Draggable draggableId={id} key={id} index={index} type={type} onDragEnd={this.handleOnDragEnd}>
                             {({ handler }) => (
                                 <span {...handler} style={{ padding: 10, backgroundColor: "white" }}>
                                     {handler.id}
@@ -81,7 +77,6 @@ export default class ExampleContainer extends React.Component<any, any> {
                             }}
                         >
                             {renderChildren(initChildren)}
-                            <DropLine/>
                         </div>
                     )}
                 </Droppable>
