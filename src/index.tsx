@@ -10,6 +10,7 @@ class DropLine extends React.Component {
     render() {
         return (
             <div style={{
+                display: "none",
                 backgroundColor: `#9436a5`,
                 width: `100%`,
                 height: 5
