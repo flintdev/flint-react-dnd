@@ -31,6 +31,7 @@ export default class Draggable extends React.Component<Props, any> {
 
     handleOnDragStart(e: any) {
         e.dataTransfer.effectAllowed = "move";
+        e.dataTransfer.setDragImage(e.target, 0, 0);
         this.setState({
             id: e.target.getAttribute("id"),
             index: e.target.getAttribute("index"),
@@ -46,7 +47,7 @@ export default class Draggable extends React.Component<Props, any> {
         e.target.parentNode.insertBefore(document.getElementById(FLINT_REACT_DND_DROPLINE), e.target);
         document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "block";
     }
-    
+
     handleOnDragLeave(e: any) {
         e.stopPropagation();
     }
@@ -56,7 +57,7 @@ export default class Draggable extends React.Component<Props, any> {
     }
 
     handleOnDragEnd(e: any) {
-        const {onDragEnd} = this.props;
+        const { onDragEnd } = this.props;
         const { id, index, type, parentId } = this.state
         const destination = document.getElementById(FLINT_REACT_DND_DROPLINE)?.parentNode as any;
         const getDestinationIndex = (children: any[]) => {
@@ -67,7 +68,7 @@ export default class Draggable extends React.Component<Props, any> {
                 if (childID === id) {
                     containerSelft = true;
                 } else if (childID === FLINT_REACT_DND_DROPLINE) {
-                    return i - (containerSelft ? 1 : 0); 
+                    return i - (containerSelft ? 1 : 0);
                 }
             }
             return -1;
@@ -81,7 +82,7 @@ export default class Draggable extends React.Component<Props, any> {
                     index: parseInt(index)
                 },
                 destination: {
-                    droppableId : destination.getAttribute("id"),
+                    droppableId: destination.getAttribute("id"),
                     index: getDestinationIndex(Array.from(destination.children))
                 }
             })
