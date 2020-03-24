@@ -12,8 +12,9 @@ export default class ExampleContainer extends React.Component<any, any> {
     }
 
     handleOnDragEnd(data: any) {
-        const {source, destination, draggableId, type} = data;
+        const {source, destination, draggableId, type, isValid} = data;
         console.log('>>> handleOnDragEnd', new Date().getTime(), data);
+        console.log('>>> handleOnDragEnd.isValid', isValid);
         console.log('>>> handleOnDragEnd.source', source);
         console.log('>>> handleOnDragEnd.destination', destination);
         console.log('>>> handleOnDragEnd.draggableId', draggableId);
@@ -60,7 +61,7 @@ export default class ExampleContainer extends React.Component<any, any> {
                         <Draggable draggableId={id} key={id} index={index} type={type} onDragEnd={this.handleOnDragEnd}>
                             {({ handler }) => (
                                 <div {...handler} style={{ padding: 10, backgroundColor: "white" }}>
-                                    <p>{handler.id}</p>
+                                    <button>{handler.id}</button>
                                 </div>
                             )}
                         </Draggable>

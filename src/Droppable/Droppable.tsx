@@ -35,8 +35,25 @@ export default class Droppable extends React.Component<Props, State> {
         }
     }
 
+    checkValid(dragId: string, dropId: string) {
+        let curId = dropId;
+        while(curId) {
+            if (curId === dragId) {
+                return false;
+            }
+            const parentNode = document.getElementById(curId)?.parentNode as any; 
+            curId = parentNode.getAttribute("id")
+        }
+        return true;
+    }
+
     handleOnDragEnter(e: any) {
-        this.setState({ isDraggingOver: true })
+        if (this.checkValid(localStorage.getItem('fromId') as string, e.target.getAttribute("id")) === false) {
+            this.setState({ isDraggingOver: false })
+        } else {
+            const isValid = this.checkValid(localStorage.getItem('fromId') as string, FLINT_REACT_DND_DROPLINE);
+            this.setState({ isDraggingOver: isValid })
+        }
         e.preventDefault();
     }
 
@@ -50,7 +67,8 @@ export default class Droppable extends React.Component<Props, State> {
         try {
             this.checkContainerBar(e);
             e.target.appendChild(document.getElementById(FLINT_REACT_DND_DROPLINE));
-            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "block";
+            const isValid = this.checkValid(localStorage.getItem('fromId') as string, FLINT_REACT_DND_DROPLINE);
+            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
         } catch(error) {
             
         }

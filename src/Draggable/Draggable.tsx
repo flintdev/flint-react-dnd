@@ -14,6 +14,7 @@ export default class Draggable extends React.Component<Props, any> {
     constructor(props: any) {
         super(props);
         this.state = {};
+        this.handleOnDragEnter = this.handleOnDragEnter.bind(this);
     }
 
     checkContainerBar(e: any) {
@@ -29,9 +30,23 @@ export default class Draggable extends React.Component<Props, any> {
         }
     }
 
+    checkValid(dragId: string, dropId: string) {
+        let curId = dropId;
+        while(curId) {
+            if (curId === dragId) {
+                return false;
+            }
+            const parentNode = document.getElementById(curId)?.parentNode as any; 
+            curId = parentNode.getAttribute("id")
+        }
+        return true;
+    }
+
     handleOnDragStart(e: any) {
         e.stopPropagation();
         e.dataTransfer.effectAllowed = "move";
+        e.target.style.opacity = 0.5;
+        localStorage.setItem('fromId', e.target.getAttribute("id"));
         e.dataTransfer.setDragImage(e.target, 0, 0);
         this.setState({
             id: e.target.getAttribute("id"),
@@ -47,7 +62,8 @@ export default class Draggable extends React.Component<Props, any> {
         if (e.target.getAttribute("draggable") === "true") {
             this.checkContainerBar(e);
             e.target.parentNode.insertBefore(document.getElementById(FLINT_REACT_DND_DROPLINE), e.target);
-            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "block";
+            const isValid = this.checkValid(localStorage.getItem('fromId') as string, FLINT_REACT_DND_DROPLINE);
+            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
         }
     }
 
@@ -62,6 +78,10 @@ export default class Draggable extends React.Component<Props, any> {
     handleOnDragEnd(e: any) {
         const { onDragEnd } = this.props;
         const { id, index, type, parentId } = this.state
+        const dragTarget = document.getElementById(id);
+        if (dragTarget && dragTarget.style) {
+            dragTarget.style.opacity = "1";
+        }
         const destination = document.getElementById(FLINT_REACT_DND_DROPLINE)?.parentNode as any;
         const getDestinationIndex = (children: any[]) => {
             let containerSelft = false;
@@ -76,10 +96,12 @@ export default class Draggable extends React.Component<Props, any> {
             }
             return -1;
         }
+
         if (onDragEnd) {
             onDragEnd({
                 draggableId: id,
                 type: type,
+                isValid: this.checkValid(id, destination.getAttribute("id")),   
                 source: {
                     droppableId: parentId,
                     index: parseInt(index)
@@ -94,6 +116,7 @@ export default class Draggable extends React.Component<Props, any> {
         }
         e.stopPropagation();
         document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "none";
+        localStorage.removeItem('fromId');
     }
 
     render() {
