@@ -36,13 +36,12 @@ export default class Droppable extends React.Component<Props, State> {
     }
 
     checkValid(dragId: string, dropId: string) {
-        let curId = dropId;
-        while(curId) {
-            if (curId === dragId) {
+        let curNode = document.getElementById(dropId)
+        while(curNode?.parentNode) {
+            if (curNode?.getAttribute("id") === dragId) {
                 return false;
             }
-            const parentNode = document.getElementById(curId)?.parentNode as any; 
-            curId = parentNode.getAttribute("id")
+            curNode = curNode?.parentNode as any; 
         }
         return true;
     }

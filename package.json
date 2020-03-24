@@ -1,6 +1,6 @@
 {
   "name": "@flintdev/flint-react-dnd",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "npm package to wrap draggable and droppable react components",
   "main": "dist/index.js",
   "scripts": {
