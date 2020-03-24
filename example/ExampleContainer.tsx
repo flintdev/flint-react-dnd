@@ -14,6 +14,10 @@ export default class ExampleContainer extends React.Component<any, any> {
     handleOnDragEnd(data: any) {
         const {source, destination, draggableId, type} = data;
         console.log('>>> handleOnDragEnd', new Date().getTime(), data);
+        console.log('>>> handleOnDragEnd.source', source);
+        console.log('>>> handleOnDragEnd.destination', destination);
+        console.log('>>> handleOnDragEnd.draggableId', draggableId);
+        console.log('>>> handleOnDragEnd.type', type);
         
         /* UPDATE_YOUR_DATA_HERE*/
         this.setState({initChildren: [...initData]})
@@ -42,6 +46,7 @@ export default class ExampleContainer extends React.Component<any, any> {
                                                     flexDirection: "column"
                                                 }}
                                             >
+                                                {handler.id}
                                                 {renderChildren(children)}
                                             </div>
                                         )}
@@ -54,9 +59,9 @@ export default class ExampleContainer extends React.Component<any, any> {
                     return (
                         <Draggable draggableId={id} key={id} index={index} type={type} onDragEnd={this.handleOnDragEnd}>
                             {({ handler }) => (
-                                <span {...handler} style={{ padding: 10, backgroundColor: "white" }}>
-                                    {handler.id}
-                                </span>
+                                <div {...handler} style={{ padding: 10, backgroundColor: "white" }}>
+                                    <p>{handler.id}</p>
+                                </div>
                             )}
                         </Draggable>
                     )

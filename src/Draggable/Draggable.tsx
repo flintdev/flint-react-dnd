@@ -30,6 +30,7 @@ export default class Draggable extends React.Component<Props, any> {
     }
 
     handleOnDragStart(e: any) {
+        e.stopPropagation();
         e.dataTransfer.effectAllowed = "move";
         e.dataTransfer.setDragImage(e.target, 0, 0);
         this.setState({
@@ -43,9 +44,11 @@ export default class Draggable extends React.Component<Props, any> {
 
     handleOnDragEnter(e: any) {
         e.stopPropagation();
-        this.checkContainerBar(e);
-        e.target.parentNode.insertBefore(document.getElementById(FLINT_REACT_DND_DROPLINE), e.target);
-        document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "block";
+        if (e.target.getAttribute("draggable") === "true") {
+            this.checkContainerBar(e);
+            e.target.parentNode.insertBefore(document.getElementById(FLINT_REACT_DND_DROPLINE), e.target);
+            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "block";
+        }
     }
 
     handleOnDragLeave(e: any) {
