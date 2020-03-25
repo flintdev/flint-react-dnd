@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FLINT_REACT_DND_DROPLINE } from '../constant';
+import { FLINT_REACT_DND_DROPLINE, FLINT_REACT_DRAGGING_ID } from '../constant';
 
 export interface Props {
     children: (props: any) => React.ReactElement,
@@ -41,12 +41,24 @@ export default class Draggable extends React.Component<Props, any> {
         return true;
     }
 
+    checkSiblingNotTarget (id: string, target: string) {
+        const prev = document.getElementById(id)?.previousElementSibling;
+        const next = document.getElementById(id)?.nextElementSibling;
+        if (prev && prev.getAttribute("id") === target) {
+            return false;
+        }
+        if (next && next.getAttribute("id") === target) {
+            return false;
+        }
+        return true;
+    }
+
 
     handleOnDragStart(e: any) {
         e.stopPropagation();
         e.dataTransfer.effectAllowed = "move";
         e.target.style.opacity = 0.5;
-        localStorage.setItem('fromId', e.target.getAttribute("id"));
+        localStorage.setItem(FLINT_REACT_DRAGGING_ID, e.target.getAttribute("id"));
         e.dataTransfer.setDragImage(e.target, 0, 0);
         this.setState({
             id: e.target.getAttribute("id"),
@@ -62,7 +74,9 @@ export default class Draggable extends React.Component<Props, any> {
         if (e.target.getAttribute("draggable") === "true") {
             this.checkContainerBar(e);
             e.target.parentNode.insertBefore(document.getElementById(FLINT_REACT_DND_DROPLINE), e.target);
-            const isValid = this.checkValid(localStorage.getItem('fromId') as string, FLINT_REACT_DND_DROPLINE);
+            const fromId = localStorage.getItem(FLINT_REACT_DRAGGING_ID) as string
+            const isValid = this.checkValid(fromId, FLINT_REACT_DND_DROPLINE) &&
+            this.checkSiblingNotTarget(FLINT_REACT_DND_DROPLINE, fromId)
             document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
         }
     }
@@ -116,7 +130,7 @@ export default class Draggable extends React.Component<Props, any> {
         }
         e.stopPropagation();
         document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "none";
-        localStorage.removeItem('fromId');
+        localStorage.removeItem(FLINT_REACT_DRAGGING_ID);
     }
 
     render() {

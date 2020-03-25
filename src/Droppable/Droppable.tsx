@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { FLINT_REACT_DND_DROPLINE } from '../constant';
+import { FLINT_REACT_DND_DROPLINE, FLINT_REACT_DRAGGING_ID } from '../constant';
 
 export interface Props {
     children: (props: any) => React.ReactElement,
@@ -47,10 +47,10 @@ export default class Droppable extends React.Component<Props, State> {
     }
 
     handleOnDragEnter(e: any) {
-        if (this.checkValid(localStorage.getItem('fromId') as string, e.target.getAttribute("id")) === false) {
+        if (this.checkValid(localStorage.getItem(FLINT_REACT_DRAGGING_ID) as string, e.target.getAttribute("id")) === false) {
             this.setState({ isDraggingOver: false })
         } else {
-            const isValid = this.checkValid(localStorage.getItem('fromId') as string, FLINT_REACT_DND_DROPLINE);
+            const isValid = this.checkValid(localStorage.getItem(FLINT_REACT_DRAGGING_ID) as string, FLINT_REACT_DND_DROPLINE);
             this.setState({ isDraggingOver: isValid })
         }
         e.preventDefault();
@@ -66,7 +66,7 @@ export default class Droppable extends React.Component<Props, State> {
         try {
             this.checkContainerBar(e);
             e.target.appendChild(document.getElementById(FLINT_REACT_DND_DROPLINE));
-            const isValid = this.checkValid(localStorage.getItem('fromId') as string, FLINT_REACT_DND_DROPLINE);
+            const isValid = this.checkValid(localStorage.getItem(FLINT_REACT_DRAGGING_ID) as string, FLINT_REACT_DND_DROPLINE);
             document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
         } catch(error) {
             
