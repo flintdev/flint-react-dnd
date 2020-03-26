@@ -115,7 +115,7 @@ export default class Draggable extends React.Component<Props, any> {
             onDragEnd({
                 draggableId: id,
                 type: type,
-                isValid: this.checkValid(id, destination.getAttribute("id")),   
+                isValid: document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display !== "none",   
                 source: {
                     droppableId: parentId,
                     index: parseInt(index)
