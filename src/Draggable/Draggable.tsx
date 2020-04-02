@@ -79,8 +79,8 @@ export default class Draggable extends React.Component<Props, any> {
             this.checkSiblingNotTarget(FLINT_REACT_DND_DROPLINE, fromId)
             if (e.target.style.display === "inline-block") {
                 document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "contents";
-                localStorage.setItem("prevBorder", e.target.style.borderLeft)
-                e.target.style.borderLeft = "5px solid #61DBFB"
+                localStorage.setItem("prevBoxShadow", e.target.style.boxShadow)
+                e.target.style.boxShadow = "-5px 0px 0px 0px #61DBFB"
             } else {
                 document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
             }
@@ -88,8 +88,8 @@ export default class Draggable extends React.Component<Props, any> {
     }
 
     handleOnDragLeave(e: any) {
-        e.target.style.borderLeft = localStorage.getItem("prevBorder")
-        localStorage.removeItem("prevBorder")
+        e.target.style.boxShadow = localStorage.getItem("prevBoxShadow")
+        localStorage.removeItem("prevBoxShadow")
         e.stopPropagation();
     }
 
