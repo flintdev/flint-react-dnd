@@ -43,8 +43,8 @@ export default class ExampleContainer extends React.Component<any, any> {
                                                     padding: 20,
                                                     minHeight: 60,
                                                     border: `1px solid grey`,
-                                                    display: "flex",
-                                                    flexDirection: "column"
+                                                    // display: "flex",
+                                                    // flexDirection: "column"
                                                 }}
                                             >
                                                 {handler.id}
@@ -60,7 +60,7 @@ export default class ExampleContainer extends React.Component<any, any> {
                     return (
                         <Draggable draggableId={id} key={id} index={index} type={type} onDragEnd={this.handleOnDragEnd}>
                             {({ handler }) => (
-                                <div {...handler} style={{ padding: 10, backgroundColor: "white" }}>
+                                <div {...handler} style={{ padding: 10, backgroundColor: "white", display: "inline-block", border: "3px solid grey"}}>
                                     <button>{handler.id}</button>
                                 </div>
                             )}

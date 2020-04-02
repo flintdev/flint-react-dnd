@@ -28,7 +28,7 @@ export default class Droppable extends React.Component<Props, State> {
             let newBar = document.createElement("div");
             newBar.style.width = `100%`;
             newBar.style.display = `none`;
-            newBar.style.backgroundColor = `#9436a5`;
+            newBar.style.backgroundColor = `#61DBFB`;
             newBar.style.height = `5px`;
             newBar.setAttribute("id", FLINT_REACT_DND_DROPLINE);
             e.target.appendChild(newBar)

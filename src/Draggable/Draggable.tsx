@@ -23,7 +23,7 @@ export default class Draggable extends React.Component<Props, any> {
             let newBar = document.createElement("div");
             newBar.style.width = `100%`;
             newBar.style.display = `none`;
-            newBar.style.backgroundColor = `#9436a5`;
+            newBar.style.backgroundColor = `#61DBFB`;
             newBar.style.height = `5px`;
             newBar.setAttribute("id", FLINT_REACT_DND_DROPLINE);
             e.target.appendChild(newBar)
@@ -77,11 +77,19 @@ export default class Draggable extends React.Component<Props, any> {
             const fromId = localStorage.getItem(FLINT_REACT_DRAGGING_ID) as string
             const isValid = this.checkValid(fromId, FLINT_REACT_DND_DROPLINE) &&
             this.checkSiblingNotTarget(FLINT_REACT_DND_DROPLINE, fromId)
-            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
+            if (e.target.style.display === "inline-block") {
+                document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "none";
+                localStorage.setItem("prevBorder", e.target.style.borderLeft)
+                e.target.style.borderLeft = "5px solid #61DBFB"
+            } else {
+                document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
+            }
         }
     }
 
     handleOnDragLeave(e: any) {
+        e.target.style.borderLeft = localStorage.getItem("prevBorder")
+        localStorage.removeItem("prevBorder")
         e.stopPropagation();
     }
 
@@ -92,9 +100,11 @@ export default class Draggable extends React.Component<Props, any> {
     handleOnDragEnd(e: any) {
         const { onDragEnd } = this.props;
         const { id, index, type, parentId } = this.state
-        const dragTarget = document.getElementById(id);
-        if (dragTarget && dragTarget.style) {
-            dragTarget.style.opacity = "1";
+        const dragTarget = Array.from(document.querySelectorAll(`[id='${id}']`)) as any[];
+        for (let target of dragTarget) {
+            if (target && target.style) {
+                target.style.opacity = "1";
+            }
         }
         const destination = document.getElementById(FLINT_REACT_DND_DROPLINE)?.parentNode as any;
         const getDestinationIndex = (children: any[]) => {
