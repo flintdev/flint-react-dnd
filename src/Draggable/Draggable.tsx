@@ -78,7 +78,7 @@ export default class Draggable extends React.Component<Props, any> {
             const isValid = this.checkValid(fromId, FLINT_REACT_DND_DROPLINE) &&
             this.checkSiblingNotTarget(FLINT_REACT_DND_DROPLINE, fromId)
             if (e.target.style.display === "inline-block") {
-                document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "none";
+                document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "contents";
                 localStorage.setItem("prevBorder", e.target.style.borderLeft)
                 e.target.style.borderLeft = "5px solid #61DBFB"
             } else {
