@@ -27,6 +27,8 @@ export default class Draggable extends React.Component<Props, any> {
             newBar.style.height = `5px`;
             newBar.setAttribute("id", FLINT_REACT_DND_DROPLINE);
             e.target.appendChild(newBar)
+        } else {
+            isValid.style.padding = "";
         }
     }
 
@@ -71,16 +73,19 @@ export default class Draggable extends React.Component<Props, any> {
 
     handleOnDragEnter(e: any) {
         e.stopPropagation();
+        if (e.target.getAttribute("id") === FLINT_REACT_DND_DROPLINE) {
+            return;
+        }
         if (e.target.getAttribute("draggable") === "true") {
             this.checkContainerBar(e);
             e.target.parentNode.insertBefore(document.getElementById(FLINT_REACT_DND_DROPLINE), e.target);
             const fromId = localStorage.getItem(FLINT_REACT_DRAGGING_ID) as string
             const isValid = this.checkValid(fromId, FLINT_REACT_DND_DROPLINE) &&
-            this.checkSiblingNotTarget(FLINT_REACT_DND_DROPLINE, fromId)
+                this.checkSiblingNotTarget(FLINT_REACT_DND_DROPLINE, fromId)
             if (e.target.style.display === "inline-block") {
-                document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = "contents";
-                localStorage.setItem("prevBoxShadow", e.target.style.boxShadow)
-                e.target.style.boxShadow = "-5px 0px 0px 0px #61DBFB"
+                const dragHeight = document.getElementById(fromId)?.clientHeight ?? 10;
+                document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "inline": "none";
+                document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.padding = isValid ? `${dragHeight/3}px 3px`: "";
             } else {
                 document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
             }
@@ -88,8 +93,6 @@ export default class Draggable extends React.Component<Props, any> {
     }
 
     handleOnDragLeave(e: any) {
-        e.target.style.boxShadow = localStorage.getItem("prevBoxShadow")
-        localStorage.removeItem("prevBoxShadow")
         e.stopPropagation();
     }
 

@@ -32,6 +32,8 @@ export default class Droppable extends React.Component<Props, State> {
             newBar.style.height = `5px`;
             newBar.setAttribute("id", FLINT_REACT_DND_DROPLINE);
             e.target.appendChild(newBar)
+        } else {
+            isValid.style.padding = "";
         }
     }
 
@@ -47,6 +49,9 @@ export default class Droppable extends React.Component<Props, State> {
     }
 
     handleOnDragEnter(e: any) {
+        if (e.target.getAttribute("id") === FLINT_REACT_DND_DROPLINE) {
+            return;
+        }
         if (this.checkValid(localStorage.getItem(FLINT_REACT_DRAGGING_ID) as string, e.target.getAttribute("id")) === false) {
             this.setState({ isDraggingOver: false })
         } else {
@@ -63,11 +68,18 @@ export default class Droppable extends React.Component<Props, State> {
 
     handleOnDragOver(e: any) {
         e.preventDefault();
+        if (e.target.getAttribute("id") === FLINT_REACT_DND_DROPLINE) {
+            return;
+        }
         try {
             this.checkContainerBar(e);
+            const children = Array.from(e.target?.children ?? []) as any[];
+            const isLastChildInlineBlock = children.length > 1 && children.slice(-2)[0]?.style.display === "inline-block";
             e.target.appendChild(document.getElementById(FLINT_REACT_DND_DROPLINE));
             const isValid = this.checkValid(localStorage.getItem(FLINT_REACT_DRAGGING_ID) as string, FLINT_REACT_DND_DROPLINE);
-            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? "block" : "none";
+            const dragHeight = document.getElementById(localStorage.getItem(FLINT_REACT_DRAGGING_ID) || "")?.clientHeight ?? 10;
+            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.display = isValid ? (isLastChildInlineBlock ? "inline" : "block") : "none";
+            document.getElementById(FLINT_REACT_DND_DROPLINE)!.style.padding = isValid ? (isLastChildInlineBlock ? `${dragHeight/3}px 3px` : "") : "";
         } catch(error) {
             
         }
